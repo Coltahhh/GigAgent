@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StageFinder | Connect with Music Venues</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background-color: #f8f9fa;
+    }
+
+    /* Header Styles */
+    .header {
+      background-color: #1a1a1a;
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .nav {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      color: #fff;
+      font-size: 1.5rem;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .nav-links a {
+      color: #fff;
+      text-decoration: none;
+      margin-left: 2rem;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+
+    /* Hero Section */
+    .hero {
+      background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)),
+      url('https://images.unsplash.com/photo-1506157786151-b8491531f063?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80');
+      background-size: cover;
+      background-position: center;
+      color: white;
+      padding: 4rem 2rem;
+      text-align: center;
+    }
+
+    .search-container {
+      max-width: 800px;
+      margin: 2rem auto;
+      background: rgba(255,255,255,0.1);
+      padding: 2rem;
+      border-radius: 15px;
+      backdrop-filter: blur(10px);
+    }
+
+    .search-form {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+
+    .search-input {
+      padding: 0.8rem;
+      border: none;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.9);
+    }
+
+    .search-button {
+      background: #4CAF50;
+      color: white;
+      border: none;
+      padding: 0.8rem 2rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    /* Venue Cards */
+    .venues-section {
+      max-width: 1200px;
+      margin: 3rem auto;
+      padding: 0 2rem;
+    }
+
+    .venue-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+
+    .venue-card {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      transition: transform 0.3s;
+    }
+
+    .venue-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .venue-image {
+      height: 200px;
+      background-size: cover;
+      background-position: center;
+    }
+
+    .venue-info {
+      padding: 1.5rem;
+    }
+
+    .venue-name {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .venue-location {
+      color: #666;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .venue-tags {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .tag {
+      background: #f0f0f0;
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.9rem;
+    }
+
+    /* Map Section */
+    .map-section {
+      height: 400px;
+      margin: 3rem 0;
+      background: #ddd;
+    }
+
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+<header class="header">
+  <nav class="nav">
+    <a href="#" class="logo">GigAgent</a>
+    <div class="nav-links">
+      <a href="#">Venues</a>
+      <a href="#">Artists</a>
+      <a href="#">Login</a>
+      <a href="#" style="background: #4CAF50; padding: 0.5rem 1rem; border-radius: 5px;">Sign Up</a>
+    </div>
+  </nav>
+</header>
+
+<section class="hero">
+  <h1>Find Your Next Performance Venue</h1>
+  <p>Connect with local venues perfect for your music</p>
+
+  <div class="search-container">
+    <form class="search-form">
+      <input type="text" class="search-input" placeholder="Location">
+      <select class="search-input">
+        <option>Any Genre</option>
+        <option>Rock</option>
+        <option>Jazz</option>
+        <option>Electronic</option>
+      </select>
+      <select class="search-input">
+        <option>Venue Size</option>
+        <option>Small (0-100)</option>
+        <option>Medium (100-300)</option>
+        <option>Large (300+)</option>
+      </select>
+      <button type="submit" class="search-button">Search</button>
+    </form>
+  </div>
+</section>
+
+<section class="venues-section">
+  <h2>Featured Venues</h2>
+  <div class="venue-grid">
+    <!-- Venue Card 1 -->
+    <div class="venue-card">
+      <div class="venue-image" style="background-image: url('https://images.unsplash.com/photo-1567592391926-cc5f8e040537?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80')"></div>
+      <div class="venue-info">
+        <h3 class="venue-name">The Jazz Cellar</h3>
+        <div class="venue-location">
+          <i class="fas fa-map-marker-alt"></i>
+          New York, NY
+        </div>
+        <div class="venue-tags">
+          <span class="tag">Capacity: 150</span>
+          <span class="tag" style="background: #e3f2fd;">Jazz</span>
+          <span class="tag" style="background: #f0f4c3;">Bar</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Venue Card 2 -->
+    <div class="venue-card">
+      <div class="venue-image" style="background-image: url('https://images.unsplash.com/photo-1556761175-4b46a572b786?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80')"></div>
+      <div class="venue-info">
+        <h3 class="venue-name">Rock Arena</h3>
+        <div class="venue-location">
+          <i class="fas fa-map-marker-alt"></i>
+          Los Angeles, CA
+        </div>
+        <div class="venue-tags">
+          <span class="tag">Capacity: 800</span>
+          <span class="tag" style="background: #ffcdd2;">Rock</span>
+          <span class="tag" style="background: #c8e6c9;">Outdoor</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="map-section">
+  <!-- Add your Google Map here -->
+</div>
+
+<script>
+  // Add interactive functionality here
+  document.querySelectorAll('.search-input').forEach(input => {
+    input.addEventListener('focus', () => {
+      input.style.background = 'rgba(255,255,255,1)';
+    });
+    input.addEventListener('blur', () => {
+      input.style.background = 'rgba(255,255,255,0.9)';
+    });
+  });
+</script>
+</body>
+</html>
