@@ -1,14 +1,12 @@
+// server/models/Venue.js
 const venueSchema = new mongoose.Schema({
     name: { type: String, required: true },
-    owner: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-    capacity: Number,
-    amenities: [String],
-    genres: [String],
-    availability: [Date],
     location: {
         type: { type: String, default: 'Point' },
-        coordinates: [Number]
+        coordinates: { type: [Number], required: true },
+        address: String,
+        city: String,
+        state: { type: String, default: 'TX' }
     }
 });
-
 venueSchema.index({ location: '2dsphere' });

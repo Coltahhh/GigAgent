@@ -1,30 +1,32 @@
+// server/routes/venues.js
 const express = require('express');
 const router = express.Router();
-const auth = require('../middleware/auth');
 const Venue = require('../models/Venue');
 
-// @route   GET /api/venues/search
-// @desc    Search venues
-router.get('/search', async (req, res) => {
+// GET venues with filters
+router.get('/', async (req, res) => {
     try {
-        const { lng, lat, radius, genres } = req.query;
+        const { location, radius, genres } = req.query;
+        const [lng, lat] = location.split(',').map(parseFloat);
 
         const venues = await Venue.find({
             location: {
                 $near: {
-                    $geometry: {
-                        type: "Point",
-                        coordinates: [parseFloat(lng), parseFloat(lat)]
-                    },
-                    $maxDistance: parseInt(radius) || 10000 // Default 10km
+                    $geometry: { type: "Point", coordinates: [lng, lat] },
+                    $maxDistance: radius * 1609 // Convert miles to meters
                 }
             },
-            genres: { $in: genres ? genres.split(',') : [] }
-        }).populate('owner', 'name email');
+            genres: genres ? { $in: genres.split(',') } : { $exists: true }
+        });
 
         res.json(venues);
     } catch (err) {
         console.error(err.message);
-        res.status(500).send('Server error');
+        res.status(500).send('Server Error');
     }
+});
+
+router.get('/', async (req, res) => {
+    const venues = await Venue.find(); // Requires MongoDB
+    res.json(venues);
 });

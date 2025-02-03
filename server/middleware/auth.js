@@ -15,3 +15,12 @@ const auth = (req, res, next) => {
 };
 
 module.exports = auth;
+
+app.use(express.json());
+
+app.use(cors({
+    origin: 'http://localhost:3000', // Frontend URL
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
+app.use(express.json()); // Parse JSON bodies

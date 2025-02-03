@@ -1,38 +1,49 @@
-import React, { useState } from 'react';
+// client/src/components/VenueSearch.js
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 const VenueSearch = () => {
     const [venues, setVenues] = useState([]);
-    const [searchData, setSearchData] = useState({
-        location: '',
+    const [search, setSearch] = useState({
+        location: '30.2672,-97.7431', // Default to Austin, TX
         radius: 10,
-        genres: []
+        genres: ''
     });
 
-    const handleSearch = async (e) => {
-        e.preventDefault();
-
-        // Get coordinates from location string (you'd use a geocoding service here)
-        const { data } = await axios.get(`https://api.geoapify.com/v1/geocode/search?text=${searchData.location}&apiKey=${process.env.REACT_APP_GEOCODE_KEY}`);
-
-        if (data.features.length > 0) {
-            const [lng, lat] = data.features[0].geometry.coordinates;
-
-            const res = await axios.get('/api/venues/search', {
-                params: { lng, lat, radius: searchData.radius * 1609.34 } // Convert miles to meters
+    const fetchVenues = async () => {
+        try {
+            const res = await axios.get('/api/venues', {
+                params: search
             });
-
             setVenues(res.data);
+        } catch (err) {
+            console.error('Error fetching venues:', err.response?.data || err.message);
         }
     };
 
+    useEffect(() => {
+        fetchVenues();
+    }, []); // Empty dependency array for initial load
+
     return (
         <div>
-            {/* Search form */}
+            <input
+                type="text"
+                placeholder="Latitude,Longitude"
+                value={search.location}
+                onChange={e => setSearch({...search, location: e.target.value})}
+            />
+            <input
+                type="number"
+                value={search.radius}
+                onChange={e => setSearch({...search, radius: e.target.value})}
+            />
+            <button onClick={fetchVenues}>Search</button>
+
             {venues.map(venue => (
                 <div key={venue._id}>
                     <h3>{venue.name}</h3>
-                    <p>Capacity: {venue.capacity}</p>
+                    <p>{venue.location.address}</p>
                 </div>
             ))}
         </div>
