@@ -56,3 +56,27 @@ router.get('/search', async (req, res) => {
         res.status(500).json({ error: 'Search failed' });
     }
 });
+
+router.get('/', async (req, res) => {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+
+    const venues = await Venue.find().skip(skip).limit(limit);
+    const total = await Venue.countDocuments();
+
+    res.json({
+        data: venues,
+        page,
+        totalPages: Math.ceil(total / limit)
+    });
+});
+
+const rateLimit = require('express-rate-limit');
+
+const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100 // Limit each IP to 100 requests per window
+});
+
+app.use(limiter);

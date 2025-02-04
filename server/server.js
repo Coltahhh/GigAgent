@@ -44,3 +44,11 @@ const yelpRouter = require('./routes/yelp');
 app.use('/api/venues', venuesRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/yelp', yelpRouter);
+
+// Add auth routes
+const authRoutes = require('./routes/auth');
+app.use('/api/auth', authRoutes);
+
+// Protect venue routes
+const venueRoutes = require('./routes/venues');
+app.use('/api/venues', venueRoutes); // Add protect middleware later
