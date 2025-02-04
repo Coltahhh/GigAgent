@@ -28,3 +28,19 @@ app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 app.get('/api/test', (req, res) => {
     res.send('Server is working!');
 });
+
+const corsOptions = {
+    origin: process.env.NODE_ENV === 'production'
+        ? 'https://your-production-domain.com'
+        : 'http://localhost:3000',
+    optionsSuccessStatus: 200
+};
+app.use(cors(corsOptions)); // Instead of app.use(cors())
+
+const venuesRouter = require('./routes/venues');
+const usersRouter = require('./routes/users');
+const yelpRouter = require('./routes/yelp');
+
+app.use('/api/venues', venuesRouter);
+app.use('/api/users', usersRouter);
+app.use('/api/yelp', yelpRouter);

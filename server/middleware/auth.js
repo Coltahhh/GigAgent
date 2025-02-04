@@ -24,3 +24,5 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
 app.use(express.json()); // Parse JSON bodies
+
+app.use('/api/venues', router);
