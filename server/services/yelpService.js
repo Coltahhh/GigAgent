@@ -1,40 +1,25 @@
 const axios = require('axios');
 
-const yelpClient = axios.create({
-    baseURL: 'https://api.yelp.com/v3',
-    headers: {
-        Authorization: `Bearer ${process.env.YELP_API_KEY}`
-    }
-});
+async function getTexasMusicVenues() {
+    const response = await axios.get('https://api.yelp.com/v3/businesses/search', {
+        headers: { Authorization: `Bearer ${process.env.YELP_API_KEY}` },
+        params: {
+            location: 'Texas, USA',
+            categories: 'musicvenues',
+            limit: 50,
+            sort_by: 'rating'
+        }
+    });
 
-async function searchTexasMusicVenues() {
-    try {
-        const response = await yelpClient.get('/businesses/search', {
-            params: {
-                location: 'Texas, USA',
-                categories: 'musicvenues',
-                limit: 50,
-                sort_by: 'rating'
-            }
-        });
-
-        return response.data.businesses.map(biz => ({
-            name: biz.name,
+    return response.data.businesses.map(biz => ({
+        name: biz.name,
+        location: {
+            coordinates: [biz.coordinates.longitude, biz.coordinates.latitude],
             address: biz.location.address1,
             city: biz.location.city,
-            state: biz.location.state,
-            coordinates: [
-                biz.coordinates.longitude,
-                biz.coordinates.latitude
-            ],
-            rating: biz.rating,
-            url: biz.url
-        }));
-
-    } catch (err) {
-        console.error('Yelp API Error:', err.response?.data || err.message);
-        return [];
-    }
+            state: biz.location.state
+        },
+        rating: biz.rating,
+        capacity: Math.floor(Math.random() * (1000 - 50 + 1) + 50) // Mock capacity
+    }));
 }
-
-module.exports = { searchTexasMusicVenues };

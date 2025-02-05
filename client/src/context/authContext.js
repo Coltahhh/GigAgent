@@ -8,33 +8,37 @@ export function AuthProvider({ children }) {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        checkLoggedIn();
+        const loadUser = async () => {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                setLoading(false);
+                return;
+            }
+
+            try {
+                const res = await axios.get('/api/v1/users/me', {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                setUser(res.data.data.user);
+            } catch (err) {
+                localStorage.removeItem('token');
+            }
+            setLoading(false);
+        };
+
+        loadUser();
     }, []);
 
-    const checkLoggedIn = async () => {
-        try {
-            const token = localStorage.getItem('token');
-            if (!token) return setLoading(false);
-
-            const res = await axios.get('/api/auth/me', {
-                headers: { Authorization: `Bearer ${token}` }
-            });
-            setUser(res.data);
-        } finally {
-            setLoading(false);
-        }
-    };
-
     const register = async (userData) => {
-        const res = await axios.post('/api/auth/register', userData);
+        const res = await axios.post('/api/v1/auth/register', userData);
         localStorage.setItem('token', res.data.token);
-        setUser(res.data.user);
+        setUser(res.data.data.user);
     };
 
     const login = async (credentials) => {
-        const res = await axios.post('/api/auth/login', credentials);
+        const res = await axios.post('/api/v1/auth/login', credentials);
         localStorage.setItem('token', res.data.token);
-        setUser(res.data.user);
+        setUser(res.data.data.user);
     };
 
     const logout = () => {

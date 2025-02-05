@@ -1,49 +1,41 @@
-// server/seeders/seed.js
+require('dotenv').config();
 const mongoose = require('mongoose');
 const Venue = require('../models/Venue');
-require('dotenv').config();
 
+// Simple test venue
 const sampleVenues = [
     {
-        name: "The Continental Club",
+        name: "Test Venue",
         location: {
-            coordinates: [-97.7431, 30.2672],
-            address: "1315 S Congress Ave",
+            coordinates: [-97.7431, 30.2672], // Longitude first!
+            address: "123 Test St",
             city: "Austin",
             state: "TX"
         },
-        capacity: 300,
-        genres: ["rock", "blues"]
-    },
-    {
-        name: "Antone's Nightclub",
-        location: {
-            coordinates: [-97.7405, 30.2664],
-            address: "305 E 5th St",
-            city: "Austin",
-            state: "TX"
-        },
-        capacity: 650,
-        genres: ["blues", "soul"]
+        capacity: 100,
+        genres: ["test"],
+        amenities: ["test"]
     }
 ];
 
 async function seedDatabase() {
     try {
+        console.log('Connecting to MongoDB...');
+
         await mongoose.connect(process.env.MONGO_URI);
-        console.log('Connected to MongoDB for seeding');
+        console.log('✅ MongoDB connected');
 
-        // Clear existing data
+        console.log('Clearing existing data...');
         await Venue.deleteMany();
-        console.log('Cleared existing venues');
 
-        // Insert sample data
-        await Venue.insertMany(sampleVenues);
-        console.log('Added sample venues');
+        console.log('Inserting test venue...');
+        const result = await Venue.insertMany(sampleVenues);
+        console.log('✅ Inserted documents:', result);
 
         process.exit(0);
     } catch (err) {
-        console.error('Seeding error:', err);
+        console.error('❌ SEEDING FAILED:', err.message);
+        if (err.errors) console.log('Validation errors:', err.errors);
         process.exit(1);
     }
 }

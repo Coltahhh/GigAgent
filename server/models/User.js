@@ -24,7 +24,7 @@ const userSchema = new mongoose.Schema({
     role: {
         type: String,
         enum: ['musician', 'venue'],
-        required: [true, 'Please select a role']
+        default: 'musician'
     },
     createdAt: {
         type: Date,
@@ -40,8 +40,8 @@ userSchema.pre('save', async function(next) {
 });
 
 // Check password validity
-userSchema.methods.correctPassword = async function(candidatePassword, userPassword) {
-    return await bcrypt.compare(candidatePassword, userPassword);
+userSchema.methods.correctPassword = async function(candidatePassword) {
+    return await bcrypt.compare(candidatePassword, this.password);
 };
 
 module.exports = mongoose.model('User', userSchema);
