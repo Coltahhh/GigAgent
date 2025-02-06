@@ -1,21 +1,24 @@
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import VenueList from './components/VenueList';
-import VenueDetail from './components/VenueDetail';
-import AddVenueForm from './components/AddVenueForm';
-import SearchBar from './components/SearchBar';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { AuthProvider } from './context/AuthContext';
+import ProtectedRoute from './components/ProtectedRoute';
+import Home from './pages/Home';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import './styles/auth.css';
 
 function App() {
     return (
-        <Router>
-            <div className="App">
-                <SearchBar />
+        <AuthProvider>
+            <BrowserRouter>
                 <Routes>
-                    <Route path="/" element={<VenueList />} />
-                    <Route path="/venues/:id" element={<VenueDetail />} />
-                    <Route path="/add-venue" element={<AddVenueForm />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/register" element={<Register />} />
+                    <Route element={<ProtectedRoute />}>
+                        <Route path="/" element={<Home />} />
+                    </Route>
                 </Routes>
-            </div>
-        </Router>
+            </BrowserRouter>
+        </AuthProvider>
     );
 }
 

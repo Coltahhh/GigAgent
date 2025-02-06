@@ -1,59 +1,55 @@
-require('dotenv').config();
+// backend/server.js
+require('dotenv').config(); // Load environment variables
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const venueRoutes = require('./routes/venues');
 
-const corsOptions = {
-    origin: process.env.FRONTEND_URL || "https://gig-agent-harrison-phillips-projects.vercel.app", // Allow requests from your frontend
-    optionsSuccessStatus: 200,
-};
-
-// Initialize Express app
 const app = express();
 
 // Middleware
 app.use(cors({
-    origin: process.env.NODE_ENV === 'production'
-        ? 'https://your-production-domain.com/'
-        : 'http://localhost:3000/',
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization']
+    origin: process.env.FRONTEND_URL || 'http://localhost:3000', // Allow frontend origin
+    credentials: true
 }));
-app.use(express.json());
+app.use(express.json()); // Parse JSON bodies
+app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies
 
-// Add after other middleware
-const authRoutes = require('./routes/auth');
-app.use('/api/v1/auth', authRoutes);
-
-// Database Connection
-mongoose.connect(process.env.MONGO_URI)
-    .then(() => console.log('✅ MongoDB connected'))
-    .catch(err => {
-        console.error('❌ MongoDB connection error:', err.message);
-        process.exit(1); // Exit if DB connection fails
-    });
+// Database connection
+mongoose.connect(process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/gigagent', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+})
+    .then(() => console.log('✅ Connected to MongoDB'))
+    .catch(err => console.error('❌ MongoDB connection error:', err));
 
 // Routes
-const venuesRouter = require('./routes/venues');
-const usersRouter = require('./routes/users');
-const yelpRouter = require('./routes/yelp');
+app.use('/api/venues', venueRoutes); // Venue-related routes
 
-app.use('/api/venues', venuesRouter);
-app.use('/api/users', usersRouter);
-app.use('/api/yelp', yelpRouter);
-
-// Error Handling Middleware
-app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).json({ error: 'Something went wrong!' });
+// Health check endpoint
+app.get('/api/health', (req, res) => {
+    res.status(200).json({ status: 'ok', timestamp: new Date() });
 });
 
-// Start Server
+// Error handling middleware
+app.use((err, req, res, next) => {
+    console.error('❌ Server error:', err.stack);
+    res.status(500).json({ error: 'Internal server error' });
+});
+
+// Serve frontend in production
+if (process.env.NODE_ENV === 'production') {
+    const path = require('path');
+    app.use(express.static(path.join(__dirname, '../client/build')));
+
+    app.get('*', (req, res) => {
+        res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
+    });
+}
+
+// Start server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-    console.log('🚀 Server running on port ${PORT}');
-})
-    .on('error', (err) => {
-        console.error('Server startup error:', err.message);
-        process.exit(1);
-    });
+    console.log(`🚀 Server running on port ${PORT}`);
+    console.log(`🔗 http://localhost:${PORT}`);
+});
