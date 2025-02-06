@@ -1,22 +1,22 @@
-const [error, setError] = useState(null);
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import VenueList from './components/VenueList';
+import VenueDetail from './components/VenueDetail';
+import AddVenueForm from './components/AddVenueForm';
+import SearchBar from './components/SearchBar';
 
-useEffect(() => {
-    const fetchVenues = async () => {
-        try {
-            const response = await axios.get('/api/venues', {
-                params: {
-                    lng: -97.7431,  // Example Austin coordinates
-                    lat: 30.2672,
-                    radius: 10
-                }
-            });
-            setVenues(response.data);
-            setError(null);
-        } catch (err) {
-            setError('Failed to load venues. Please try again later.');
-            console.error('API Error:', err);
-        }
-    };
+function App() {
+    return (
+        <Router>
+            <div className="App">
+                <SearchBar />
+                <Routes>
+                    <Route path="/" element={<VenueList />} />
+                    <Route path="/venues/:id" element={<VenueDetail />} />
+                    <Route path="/add-venue" element={<AddVenueForm />} />
+                </Routes>
+            </div>
+        </Router>
+    );
+}
 
-    fetchVenues();
-}, []);
+export default App;
