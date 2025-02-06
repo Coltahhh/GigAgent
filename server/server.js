@@ -23,6 +23,8 @@ mongoose.connect(process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/gigagent', 
     .then(() => console.log('✅ Connected to MongoDB'))
     .catch(err => console.error('❌ MongoDB connection error:', err));
 
+mongoose.set('castUuid', require('./models/cast/uuid'));
+
 // Routes
 app.use('/api/venues', venueRoutes); // Venue-related routes
 
