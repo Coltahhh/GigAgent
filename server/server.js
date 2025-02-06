@@ -3,6 +3,11 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 
+const corsOptions = {
+    origin: process.env.FRONTEND_URL || "https://gig-agent-harrison-phillips-projects.vercel.app", // Allow requests from your frontend
+    optionsSuccessStatus: 200,
+};
+
 // Initialize Express app
 const app = express();
 
