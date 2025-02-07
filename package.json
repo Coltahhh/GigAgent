@@ -1,13 +1,12 @@
 {
-  "name": "GigAgent",
+  "name": "gigagent",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
   "scripts": {
-    "build-client": "cd client && npm install && npm run build",
-    "start": "node server.js",
-    "dev": "nodemon server.js",
-    "seed": "node seeders/seed.js"
+    "install-client": "cd client && npm install",
+    "build-client": "cd client && npm run build",
+    "install-server": "cd server && npm install",
+    "start-server": "cd server && npm start",
+    "deploy": "npm run install-client && npm run build-client && npm run install-server && npm run start-server"
   },
   "private": true,
   "dependencies": {
