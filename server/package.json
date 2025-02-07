@@ -26,5 +26,9 @@
     "bson": "^6.2.0",
     "uuid": "^9.0.1"
   },
+  "engines": {
+    "node": "18.x"
+  },
+
   "description": ""
 }
